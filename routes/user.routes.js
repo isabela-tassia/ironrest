@@ -117,4 +117,25 @@ router.get("/profile", isAuthenticated, attachCurrentUser, (req, res) => {
   }
 });
 
+//Update the post
+router.put("/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateUser = await UserModel.findOneAndUpdate(
+      { _id: id },
+      { $set: req.body },
+      { new: true }
+    );
+
+    if (updateUser) {
+      return res.status(200).json(updateUser);
+    } else {
+      return res.status(404).json({ msg: "User not found." });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: JSON.stringify(err) });
+  }
+});
+
 module.exports = router;

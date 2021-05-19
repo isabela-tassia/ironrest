@@ -47,6 +47,27 @@ router.get("/pet", async (req, res) => {
   }
 });
 
+//Update the post
+router.put("/pet/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatePet = await PetModel.findOneAndUpdate(
+      { _id: id },
+      { $set: req.body },
+      { new: true }
+    );
+
+    if (updatePet) {
+      return res.status(200).json(updatePet);
+    } else {
+      return res.status(404).json({ msg: "Pet not found." });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: JSON.stringify(err) });
+  }
+});
+
 // Delete the Pet
 router.delete("/pet/:id", async (req, res) => {
   try {

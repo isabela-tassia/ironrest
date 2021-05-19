@@ -47,6 +47,28 @@ router.get("/post", async (req, res) => {
     return res.status(500).json({ msg: JSON.stringify(err) });
   }
 });
+
+//Update the post
+router.put("/post/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatePost = await PostModel.findOneAndUpdate(
+      { _id: id },
+      { $set: req.body },
+      { new: true }
+    );
+
+    if (updatePost) {
+      return res.status(200).json(updatePost);
+    } else {
+      return res.status(404).json({ msg: "Post not found." });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: JSON.stringify(err) });
+  }
+});
+
 // Delete the Post
 router.delete("/post/:id", async (req, res) => {
   try {
