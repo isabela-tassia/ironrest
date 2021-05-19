@@ -40,6 +40,7 @@ router.post("/signup", async (req, res) => {
     // Salva os dados de usuário no banco de dados (MongoDB) usando o body da requisição como parâmetro
     const result = await UserModel.create({
       ...req.body,
+      role: "ADMIN",
       passwordHash: hashedPassword,
     });
 

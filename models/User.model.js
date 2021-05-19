@@ -16,6 +16,8 @@ const UserSchema = new Schema({
     required: true,
     default: "USER",
   },
+  pets: [{ type: Schema.Types.ObjectId, ref: "Pet" }],
+  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
 });
 
 const UserModel = model("User", UserSchema);
