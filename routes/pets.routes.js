@@ -63,7 +63,7 @@ router.get(
       console.log(findPet);
 
       if (findPet) {
-        return res.status(200).json(findPcet);
+        return res.status(200).json(findPet);
       } else {
         return res.status(404).json({ msg: "Pet not found." });
       }
