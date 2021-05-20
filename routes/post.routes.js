@@ -1,3 +1,4 @@
+const uploadCloud = require("../config/cloudinary.config");
 const router = require("express").Router();
 const PostModel = require("../models/Post.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
@@ -88,5 +89,22 @@ router.delete("/post/:id", async (req, res) => {
     return res.status(500).json({ msg: JSON.stringify(err) });
   }
 });
+
+// upload de imagem
+router.post(
+  "/image-upload",
+  isAuthenticated,
+  attachCurrentUser,
+  uploadCloud.single("image"),
+  (req, res) => {
+    if (!req.file) {
+      return res.status(500).json({ msg: "No file uploaded" });
+    }
+
+    console.log(req.file);
+
+    return res.status(201).json({ fileUrl: req.file.path });
+  }
+);
 
 module.exports = router;

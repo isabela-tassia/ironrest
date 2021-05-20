@@ -2,6 +2,7 @@ const router = require("express").Router();
 const PetModel = require("../models/Pet.model");
 const isAuthenticated = require("../middlewares/isAuthenticated");
 const attachCurrentUser = require("../middlewares/attachCurrentUser");
+const UserModel = require("../models/User.model");
 // Register the Pet
 router.post(
   "/pet-register",
@@ -30,9 +31,26 @@ router.post(
 
 // cRud (READ) - HTTP GET
 // Search all the Pets
-router.get("/pet", async (req, res) => {
+router.get("/pet", isAuthenticated, attachCurrentUser, async (req, res) => {
   try {
-    const findPet = await PetModel.find();
+    const findPet = await PetModel.find({ user: req.currentUser._id });
+
+    console.log(findPet);
+
+    if (findPet) {
+      return res.status(200).json(findPet);
+    } else {
+      return res.status(404).json({ msg: "Pet not found." });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: JSON.stringify(err) });
+  }
+});
+
+router.get("/pet/:id", isAuthenticated, attachCurrentUser, async (req, res) => {
+  try {
+    const findPet = await PetModel.findOne({ _id: req.params.id });
 
     console.log(findPet);
 
