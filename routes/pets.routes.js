@@ -48,6 +48,32 @@ router.get("/pet", isAuthenticated, attachCurrentUser, async (req, res) => {
   }
 });
 
+//devolver todos os pets que não são os do usuário
+
+router.get(
+  "/pet-dashboard",
+  isAuthenticated,
+  attachCurrentUser,
+  async (req, res) => {
+    try {
+      const findPet = await PetModel.find({
+        user: { $ne: req.currentUser._id },
+      });
+
+      console.log(findPet);
+
+      if (findPet) {
+        return res.status(200).json(findPcet);
+      } else {
+        return res.status(404).json({ msg: "Pet not found." });
+      }
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ msg: JSON.stringify(err) });
+    }
+  }
+);
+
 router.get("/pet/:id", isAuthenticated, attachCurrentUser, async (req, res) => {
   try {
     const findPet = await PetModel.findOne({ _id: req.params.id });
